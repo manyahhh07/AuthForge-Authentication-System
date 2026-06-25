@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — AuthSystem</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-brand">
+      <div class="nav-brand-dot"></div>
+      AuthSystem
+    </div>
+    <div class="nav-links">
+      <a href="/dashboard" class="nav-link active">Dashboard</a>
+      <a href="/profile" class="nav-link">Profile</a>
+    </div>
+    <div class="nav-user">
+      <div class="avatar avatar-sm" id="navAvatar">??</div>
+      <span id="navName" style="font-size:13px;font-weight:500;color:var(--c-ink2);"></span>
+      <button class="btn btn-ghost btn-sm" id="logoutBtn">Sign out</button>
+    </div>
+  </div>
+</nav>
+
+<div class="container dash-wrap">
+  <div class="dash-grid">
+
+    <!-- Sidebar -->
+    <aside class="dash-sidebar">
+      <div class="card">
+        <div class="card-body" style="padding:16px 8px;">
+          <ul class="sidebar-nav">
+            <li>
+              <a href="/dashboard" class="sidebar-link active">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Overview
+              </a>
+            </li>
+            <li>
+              <a href="/profile" class="sidebar-link">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Profile
+              </a>
+            </li>
+            <li>
+              <a href="#sessions" class="sidebar-link" id="sessionsLink">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                Sessions
+              </a>
+            </li>
+            <li>
+              <a href="#token" class="sidebar-link" id="tokenLink">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+                JWT Inspector
+              </a>
+            </li>
+            <li id="adminLi" class="hidden">
+              <a href="#admin" class="sidebar-link" id="adminLink">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Admin Panel
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <main>
+
+      <!-- Overview section -->
+      <div id="section-overview">
+        <div style="margin-bottom:24px;">
+          <h1 id="welcomeHeading">Welcome back</h1>
+          <p id="welcomeSub" style="margin-top:4px;font-size:14px;"></p>
+        </div>
+
+        <div class="metric-grid">
+          <div class="metric-card">
+            <div class="metric-label">Account Status</div>
+            <div class="metric-value"><span class="badge badge-green">Active</span></div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Role</div>
+            <div class="metric-value" id="metricRole" style="font-size:16px;padding-top:4px;">—</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Active Sessions</div>
+            <div class="metric-value" id="metricSessions">—</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Member Since</div>
+            <div class="metric-value" id="metricJoined" style="font-size:14px;padding-top:4px;">—</div>
+          </div>
+        </div>
+
+        <!-- Account card -->
+        <div class="card mb-3">
+          <div class="card-header">
+            <h3>Account Information</h3>
+            <a href="/profile" class="btn btn-outline btn-sm">Edit profile</a>
+          </div>
+          <div class="card-body">
+            <div style="display:flex;align-items:center;gap:18px;margin-bottom:20px;">
+              <div class="avatar avatar-lg" id="dashAvatar">??</div>
+              <div>
+                <div id="dashName" style="font-family:var(--font-display);font-size:22px;font-weight:600;color:var(--c-ink);"></div>
+                <div id="dashEmail" style="font-size:13px;color:var(--c-ink3);margin-top:2px;"></div>
+                <div id="dashRole" style="margin-top:6px;"></div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+              <div style="padding:12px 14px;background:var(--c-surface2);border-radius:var(--r-sm);border:1px solid var(--c-border);">
+                <div class="metric-label" style="margin-bottom:4px;">Last login</div>
+                <div id="dashLastLogin" class="text-sm" style="color:var(--c-ink2);">—</div>
+              </div>
+              <div style="padding:12px 14px;background:var(--c-surface2);border-radius:var(--r-sm);border:1px solid var(--c-border);">
+                <div class="metric-label" style="margin-bottom:4px;">Account created</div>
+                <div id="dashCreatedAt" class="text-sm" style="color:var(--c-ink2);">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sessions section -->
+      <div class="card mb-3" id="section-sessions">
+        <div class="card-header">
+          <h3>Active Sessions</h3>
+          <span class="badge badge-blue" id="sessionCount">0 sessions</span>
+        </div>
+        <div class="card-body" style="padding:0;">
+          <div style="overflow-x:auto;">
+            <table class="session-table">
+              <thead>
+                <tr>
+                  <th>Device / Browser</th>
+                  <th>IP Address</th>
+                  <th>Started</th>
+                  <th>Status</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="sessionTableBody">
+                <tr><td colspan="5" style="text-align:center;color:var(--c-ink3);padding:24px;">Loading sessions...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- JWT Inspector -->
+      <div class="card mb-3" id="section-token">
+        <div class="card-header">
+          <h3>JWT Inspector</h3>
+          <span class="badge badge-teal">Debug tool</span>
+        </div>
+        <div class="card-body">
+          <p style="font-size:13px;margin-bottom:16px;">Your current JWT token, decoded client-side. The signature is not verified here — that happens on the server.</p>
+          <div class="form-label">Raw token</div>
+          <div id="rawToken" class="token-box" style="margin-bottom:16px;word-break:break-all;">Loading...</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+            <div>
+              <div class="form-label">Header</div>
+              <pre id="jwtHeader" style="background:var(--c-surface2);border:1px solid var(--c-border);border-radius:var(--r-sm);padding:12px;font-family:var(--font-mono);font-size:11px;color:var(--c-ink2);overflow-x:auto;line-height:1.6;"></pre>
+            </div>
+            <div>
+              <div class="form-label">Payload</div>
+              <pre id="jwtPayload" style="background:var(--c-surface2);border:1px solid var(--c-border);border-radius:var(--r-sm);padding:12px;font-family:var(--font-mono);font-size:11px;color:var(--c-ink2);overflow-x:auto;line-height:1.6;"></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Panel (admin only) -->
+      <div class="card mb-3 hidden" id="section-admin">
+        <div class="card-header">
+          <h3>Admin — All Users</h3>
+          <span class="badge badge-rose">Admin only</span>
+        </div>
+        <div class="card-body" style="padding:0;">
+          <div style="overflow-x:auto;">
+            <table class="session-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Joined</th>
+                  <th>Last Login</th>
+                </tr>
+              </thead>
+              <tbody id="adminTableBody">
+                <tr><td colspan="5" style="text-align:center;color:var(--c-ink3);padding:24px;">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="/js/auth.js"></script>
+<script>
+  let currentData = null;
+
+  async function init() {
+    const data = await requireAuth();
+    if (!data) return;
+    currentData = data;
+
+    const { user, sessions } = data;
+
+    // Nav
+    document.getElementById('navAvatar').textContent = user.avatar || '??';
+    document.getElementById('navName').textContent   = user.name;
+
+    // Welcome
+    document.getElementById('welcomeHeading').textContent = `Welcome back, ${user.name.split(' ')[0]}`;
+    document.getElementById('welcomeSub').textContent = `You're signed in as ${user.email}`;
+
+    // Metrics
+    document.getElementById('metricRole').innerHTML =
+      `<span class="badge ${user.role === 'admin' ? 'badge-rose' : 'badge-blue'}">${user.role}</span>`;
+    document.getElementById('metricSessions').textContent = sessions.length;
+    document.getElementById('metricJoined').textContent =
+      new Date(user.createdAt).toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' });
+
+    // Account card
+    document.getElementById('dashAvatar').textContent = user.avatar || '??';
+    document.getElementById('dashName').textContent   = user.name;
+    document.getElementById('dashEmail').textContent  = user.email;
+    document.getElementById('dashRole').innerHTML =
+      `<span class="badge ${user.role === 'admin' ? 'badge-rose' : 'badge-blue'}">${user.role}</span>`;
+    document.getElementById('dashLastLogin').textContent  = fmtDate(user.lastLogin);
+    document.getElementById('dashCreatedAt').textContent  = fmtDate(user.createdAt);
+
+    // Sessions
+    renderSessions(sessions);
+
+    // JWT
+    const tokenCookie = await getToken();
+    if (tokenCookie) {
+      renderJwtInspector('rawToken', tokenCookie);
+      const parts = tokenCookie.split('.');
+      try {
+        const header  = JSON.parse(atob(parts[0]));
+        const payload = JSON.parse(atob(parts[1].replace(/-/g,'+').replace(/_/g,'/')));
+        document.getElementById('jwtHeader').textContent  = JSON.stringify(header, null, 2);
+        document.getElementById('jwtPayload').textContent = JSON.stringify({
+          ...payload,
+          iat: `${payload.iat} (${fmtDate(new Date(payload.iat * 1000).toISOString())})`,
+          exp: `${payload.exp} (${fmtDate(new Date(payload.exp * 1000).toISOString())})`,
+        }, null, 2);
+      } catch {}
+    } else {
+      document.getElementById('rawToken').textContent = 'Token stored in httpOnly cookie (not accessible from JS — this is by design for security).';
+      document.getElementById('jwtHeader').textContent  = 'N/A — httpOnly cookie';
+      document.getElementById('jwtPayload').textContent = JSON.stringify({
+        sub: user.id, email: user.email, note: 'Decoded server-side only'
+      }, null, 2);
+    }
+
+    // Admin
+    if (user.role === 'admin') {
+      document.getElementById('adminLi').classList.remove('hidden');
+      document.getElementById('section-admin').classList.remove('hidden');
+      loadAdminUsers();
+    }
+  }
+
+  async function getToken() {
+    // httpOnly cookies can't be read by JS — return null (secure)
+    return null;
+  }
+
+  function renderSessions(sessions) {
+    document.getElementById('sessionCount').textContent = `${sessions.length} session${sessions.length !== 1 ? 's' : ''}`;
+    const tbody = document.getElementById('sessionTableBody');
+    if (!sessions.length) {
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--c-ink3);padding:24px;">No sessions found.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = sessions.map(s => `
+      <tr>
+        <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escHtml(s.userAgent)}">${escHtml(s.userAgent)}</td>
+        <td><code style="font-family:var(--font-mono);font-size:11px;">${escHtml(s.ip)}</code></td>
+        <td>${fmtDate(s.createdAt)}</td>
+        <td>${s.current ? '<span class="badge badge-green">Current</span>' : '<span class="badge badge-teal">Active</span>'}</td>
+        <td>${s.current ? '' : `<button class="btn btn-danger btn-sm" onclick="revokeSession('${s.jti}')">Revoke</button>`}</td>
+      </tr>
+    `).join('');
+  }
+
+  async function revokeSession(jti) {
+    if (!confirm('Revoke this session?')) return;
+    const { ok, data } = await apiFetch(`/api/sessions/${jti}`, { method: 'DELETE' });
+    if (ok) {
+      const res = await apiFetch('/api/me');
+      if (res.ok) renderSessions(res.data.sessions);
+    } else {
+      alert(data.error || 'Could not revoke session.');
+    }
+  }
+
+  async function loadAdminUsers() {
+    const { ok, data } = await apiFetch('/api/admin/users');
+    if (!ok) return;
+    const tbody = document.getElementById('adminTableBody');
+    tbody.innerHTML = data.users.map(u => `
+      <tr>
+        <td><div style="display:flex;align-items:center;gap:8px;"><div class="avatar avatar-sm">${escHtml(u.avatar||'?')}</div> ${escHtml(u.name)}</div></td>
+        <td>${escHtml(u.email)}</td>
+        <td><span class="badge ${u.role === 'admin' ? 'badge-rose' : 'badge-blue'}">${u.role}</span></td>
+        <td>${fmtDate(u.createdAt)}</td>
+        <td>${fmtDate(u.lastLogin)}</td>
+      </tr>
+    `).join('');
+  }
+
+  function escHtml(str) {
+    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  document.getElementById('logoutBtn').addEventListener('click', async () => {
+    const { ok, data } = await apiFetch('/api/logout', { method: 'POST' });
+    window.location.href = '/login';
+  });
+
+  // Smooth anchor navigation
+  document.querySelectorAll('.sidebar-link[href^="#"]').forEach(link => {
+    link.addEventListener('click', e => {
+      document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+    });
+  });
+
+  init();
+</script>
+</body>
+</html>

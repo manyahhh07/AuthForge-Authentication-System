@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Forgot Password — AuthSystem</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<div class="auth-page">
+  <aside class="auth-aside">
+    <div class="auth-aside-inner">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:40px;">
+        <div style="width:36px;height:36px;border-radius:10px;background:rgba(107,127,212,0.25);border:1px solid rgba(107,127,212,0.35);display:flex;align-items:center;justify-content:center;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--c-blue-dk)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <span style="font-family:var(--font-display);font-size:20px;font-weight:600;color:var(--c-ink)">AuthSystem</span>
+      </div>
+
+      <h2>Reset your<br/>password safely.</h2>
+      <p style="margin-bottom:32px;">We'll send a time-limited reset link. It expires in 15 minutes for your security.</p>
+
+      <div style="background:rgba(255,255,255,0.5);border-radius:var(--r-md);border:1px solid rgba(255,255,255,0.7);padding:18px 20px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--c-ink3);margin-bottom:12px;">Reset flow</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <div style="width:22px;height:22px;border-radius:6px;background:var(--c-blue-lt);border:1px solid rgba(107,127,212,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--c-blue-dk);">1</div>
+            <span style="font-size:13px;color:var(--c-ink2);padding-top:3px;">Enter your registered email</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <div style="width:22px;height:22px;border-radius:6px;background:var(--c-teal-lt);border:1px solid rgba(91,168,160,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--c-teal);">2</div>
+            <span style="font-size:13px;color:var(--c-ink2);padding-top:3px;">Check your inbox for a reset link</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <div style="width:22px;height:22px;border-radius:6px;background:var(--c-green-lt);border:1px solid rgba(90,158,122,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--c-green);">3</div>
+            <span style="font-size:13px;color:var(--c-ink2);padding-top:3px;">Set a new secure password</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="auth-main">
+    <div class="auth-box">
+      <div class="auth-box-header">
+        <h1>Forgot password?</h1>
+        <p>Enter your email and we'll send you a reset link.</p>
+      </div>
+
+      <div id="alert-container"></div>
+
+      <!-- Step 1: email form -->
+      <div id="step-email">
+        <form id="forgotForm" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="email">Email address</label>
+            <input class="form-input" type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" required />
+          </div>
+          <button type="submit" class="btn btn-primary btn-full" id="submitBtn">Send reset link</button>
+        </form>
+
+        <div class="text-center text-sm mt-3" style="color:var(--c-ink2);">
+          Remember it now? <a href="/login" style="font-weight:600;">Sign in</a>
+        </div>
+      </div>
+
+      <!-- Step 2: demo reset link display -->
+      <div id="step-link" class="hidden">
+        <div style="text-align:center;margin-bottom:24px;">
+          <div style="width:56px;height:56px;border-radius:50%;background:var(--c-green-lt);border:1px solid rgba(90,158,122,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--c-green)" stroke-width="2" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+          </div>
+          <h3 style="margin-bottom:6px;font-size:18px;">Check your inbox</h3>
+          <p style="font-size:13px;">In production, a reset link would be emailed. In demo mode, use the link below:</p>
+        </div>
+        <div id="resetLinkBox" style="background:var(--c-blue-lt);border-radius:var(--r-sm);padding:14px;margin-bottom:20px;word-break:break-all;font-family:var(--font-mono);font-size:12px;color:var(--c-blue-dk);border:1px solid rgba(107,127,212,0.25);"></div>
+        <a id="goToReset" href="#" class="btn btn-primary btn-full">Open reset link →</a>
+        <div class="text-center text-sm mt-2" style="color:var(--c-ink3);">Link expires in 15 minutes</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="/js/auth.js"></script>
+<script>
+  (async () => { await requireGuest(); })();
+
+  document.getElementById('forgotForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearAlert('alert-container');
+    const btn = document.getElementById('submitBtn');
+    setLoading(btn, true, 'Sending...');
+
+    const { ok, data } = await apiFetch('/api/forgot-password', {
+      method: 'POST',
+      body: JSON.stringify({ email: document.getElementById('email').value.trim() }),
+    });
+
+    setLoading(btn, false);
+    if (ok) {
+      document.getElementById('step-email').classList.add('hidden');
+      document.getElementById('step-link').classList.remove('hidden');
+      if (data.resetUrl) {
+        document.getElementById('resetLinkBox').textContent = data.resetUrl;
+        document.getElementById('goToReset').href = data.resetUrl;
+      } else {
+        document.getElementById('resetLinkBox').textContent = 'Check the server console for the reset link.';
+        document.getElementById('goToReset').classList.add('hidden');
+      }
+    } else {
+      showAlert('alert-container', data.error || 'Something went wrong.', 'error');
+    }
+  });
+</script>
+</body>
+</html>

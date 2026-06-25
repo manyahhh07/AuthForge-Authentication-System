@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account — AuthSystem</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<div class="auth-page">
+  <aside class="auth-aside">
+    <div class="auth-aside-inner">
+      <div style="margin-bottom:40px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:32px;">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(107,127,212,0.25);border:1px solid rgba(107,127,212,0.35);display:flex;align-items:center;justify-content:center;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--c-blue-dk)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <span style="font-family:var(--font-display);font-size:20px;font-weight:600;color:var(--c-ink)">AuthSystem</span>
+        </div>
+        <h2>Join in seconds.<br/>Protected from day one.</h2>
+        <p>Your password is hashed with bcrypt before it ever touches the database. We never store plaintext credentials.</p>
+      </div>
+
+      <div style="background:rgba(255,255,255,0.5);border-radius:var(--r-md);border:1px solid rgba(255,255,255,0.7);padding:18px 20px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--c-ink3);margin-bottom:12px;">How we secure your password</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <div style="width:22px;height:22px;border-radius:6px;background:var(--c-blue-lt);border:1px solid rgba(107,127,212,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--c-blue-dk);">1</div>
+            <span style="font-size:13px;color:var(--c-ink2);padding-top:3px;">Generate a random 12-round salt</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <div style="width:22px;height:22px;border-radius:6px;background:var(--c-teal-lt);border:1px solid rgba(91,168,160,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--c-teal);">2</div>
+            <span style="font-size:13px;color:var(--c-ink2);padding-top:3px;">Hash with bcrypt — computationally expensive by design</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <div style="width:22px;height:22px;border-radius:6px;background:var(--c-green-lt);border:1px solid rgba(90,158,122,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--c-green);">3</div>
+            <span style="font-size:13px;color:var(--c-ink2);padding-top:3px;">Store only the hash — the original password is never saved</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="auth-main">
+    <div class="auth-box">
+      <div class="auth-box-header">
+        <h1>Create account</h1>
+        <p>Get started with a free account today.</p>
+      </div>
+
+      <div id="alert-container"></div>
+
+      <form id="registerForm" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="name">Full name</label>
+          <input class="form-input" type="text" id="name" name="name" placeholder="Jane Doe" autocomplete="name" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="email">Email address</label>
+          <input class="form-input" type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <div class="input-wrap">
+            <input class="form-input" type="password" id="password" name="password" placeholder="Minimum 8 characters" autocomplete="new-password" required />
+            <span class="input-icon text-xs" id="pwToggle" style="font-weight:600;font-size:12px;letter-spacing:0.04em">Show</span>
+          </div>
+          <div class="strength-bar" id="strengthBar"><div class="strength-fill"></div></div>
+          <div class="form-hint" id="strengthLabel"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="confirm">Confirm password</label>
+          <div class="input-wrap">
+            <input class="form-input" type="password" id="confirm" name="confirm" placeholder="Repeat password" autocomplete="new-password" required />
+            <span class="input-icon text-xs" id="confirmToggle" style="font-weight:600;font-size:12px;letter-spacing:0.04em">Show</span>
+          </div>
+          <div class="form-hint" id="confirmHint"></div>
+        </div>
+
+        <div style="margin-bottom:20px;">
+          <label style="display:flex;align-items:flex-start;gap:9px;cursor:pointer;font-size:13px;color:var(--c-ink2);">
+            <input type="checkbox" id="terms" style="width:14px;height:14px;margin-top:2px;accent-color:var(--c-blue);" required />
+            I agree to the <a href="#" style="color:var(--c-blue);font-weight:600;">Terms of Service</a> and <a href="#" style="color:var(--c-blue);font-weight:600;">Privacy Policy</a>
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full" id="submitBtn">Create account</button>
+      </form>
+
+      <div class="divider">OR</div>
+
+      <div class="text-center text-sm" style="color:var(--c-ink2);">
+        Already have an account? <a href="/login" style="font-weight:600;">Sign in</a>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="/js/auth.js"></script>
+<script>
+  (async () => { await requireGuest(); })();
+  setupPasswordToggle('password', 'pwToggle');
+  setupPasswordToggle('confirm',  'confirmToggle');
+  setupStrengthMeter('password', 'strengthBar');
+
+  document.getElementById('confirm').addEventListener('input', function() {
+    const pw   = document.getElementById('password').value;
+    const hint = document.getElementById('confirmHint');
+    if (!this.value) { hint.textContent = ''; this.classList.remove('error','success'); return; }
+    if (this.value === pw) {
+      hint.textContent = 'Passwords match';
+      hint.style.color = 'var(--c-green)';
+      this.classList.remove('error'); this.classList.add('success');
+    } else {
+      hint.textContent = 'Passwords do not match';
+      hint.style.color = 'var(--c-rose)';
+      this.classList.add('error'); this.classList.remove('success');
+    }
+  });
+
+  document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearAlert('alert-container');
+
+    const name     = document.getElementById('name').value.trim();
+    const email    = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const confirm  = document.getElementById('confirm').value;
+    const terms    = document.getElementById('terms').checked;
+
+    if (!terms) { showAlert('alert-container', 'Please accept the Terms of Service to continue.', 'warn'); return; }
+    if (password !== confirm) { showAlert('alert-container', 'Passwords do not match.', 'error'); return; }
+
+    const btn = document.getElementById('submitBtn');
+    setLoading(btn, true, 'Creating account...');
+
+    const { ok, data } = await apiFetch('/api/register', {
+      method: 'POST',
+      body: JSON.stringify({ name, email, password }),
+    });
+
+    setLoading(btn, false);
+    if (ok) {
+      showAlert('alert-container', 'Account created! Redirecting...', 'success');
+      setTimeout(() => window.location.href = data.redirect || '/dashboard', 800);
+    } else {
+      showAlert('alert-container', data.error || 'Registration failed.', 'error');
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reset Password — AuthSystem</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<div class="auth-page">
+  <aside class="auth-aside">
+    <div class="auth-aside-inner">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:40px;">
+        <div style="width:36px;height:36px;border-radius:10px;background:rgba(107,127,212,0.25);border:1px solid rgba(107,127,212,0.35);display:flex;align-items:center;justify-content:center;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--c-blue-dk)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <span style="font-family:var(--font-display);font-size:20px;font-weight:600;color:var(--c-ink)">AuthSystem</span>
+      </div>
+      <h2>Choose a strong<br/>new password.</h2>
+      <p>Pick something unique. After reset, all other active sessions will be revoked for your security.</p>
+    </div>
+  </aside>
+
+  <main class="auth-main">
+    <div class="auth-box">
+      <div class="auth-box-header">
+        <h1>Set new password</h1>
+        <p>Enter and confirm your new password below.</p>
+      </div>
+
+      <div id="alert-container"></div>
+
+      <div id="invalid-token" class="hidden">
+        <div style="text-align:center;padding:24px 0;">
+          <div style="width:56px;height:56px;border-radius:50%;background:var(--c-rose-lt);border:1px solid rgba(196,122,122,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--c-rose)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <h3 style="margin-bottom:8px;color:var(--c-rose);">Invalid or expired link</h3>
+          <p style="font-size:13px;margin-bottom:20px;">This reset link is invalid or has expired (15 min TTL).</p>
+          <a href="/forgot" class="btn btn-primary">Request a new link</a>
+        </div>
+      </div>
+
+      <form id="resetForm" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="password">New password</label>
+          <div class="input-wrap">
+            <input class="form-input" type="password" id="password" name="password" placeholder="Minimum 8 characters" autocomplete="new-password" required />
+            <span class="input-icon text-xs" id="pwToggle" style="font-weight:600;font-size:12px;letter-spacing:0.04em">Show</span>
+          </div>
+          <div class="strength-bar" id="strengthBar"><div class="strength-fill"></div></div>
+          <div class="form-hint" id="strengthLabel"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="confirm">Confirm new password</label>
+          <div class="input-wrap">
+            <input class="form-input" type="password" id="confirm" name="confirm" placeholder="Repeat password" autocomplete="new-password" required />
+            <span class="input-icon text-xs" id="confirmToggle" style="font-weight:600;font-size:12px;letter-spacing:0.04em">Show</span>
+          </div>
+          <div class="form-hint" id="confirmHint"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full" id="submitBtn">Reset password</button>
+      </form>
+    </div>
+  </main>
+</div>
+
+<script src="/js/auth.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const token  = params.get('token');
+
+  if (!token) {
+    document.getElementById('resetForm').classList.add('hidden');
+    document.getElementById('invalid-token').classList.remove('hidden');
+  }
+
+  setupPasswordToggle('password', 'pwToggle');
+  setupPasswordToggle('confirm',  'confirmToggle');
+  setupStrengthMeter('password', 'strengthBar');
+
+  document.getElementById('confirm').addEventListener('input', function() {
+    const pw   = document.getElementById('password').value;
+    const hint = document.getElementById('confirmHint');
+    if (!this.value) { hint.textContent = ''; this.classList.remove('error','success'); return; }
+    if (this.value === pw) {
+      hint.textContent = 'Passwords match';
+      hint.style.color = 'var(--c-green)';
+      this.classList.remove('error'); this.classList.add('success');
+    } else {
+      hint.textContent = 'Passwords do not match';
+      hint.style.color = 'var(--c-rose)';
+      this.classList.add('error'); this.classList.remove('success');
+    }
+  });
+
+  document.getElementById('resetForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearAlert('alert-container');
+
+    const password = document.getElementById('password').value;
+    const confirm  = document.getElementById('confirm').value;
+
+    if (password !== confirm) { showAlert('alert-container', 'Passwords do not match.', 'error'); return; }
+
+    const btn = document.getElementById('submitBtn');
+    setLoading(btn, true, 'Resetting...');
+
+    const { ok, data } = await apiFetch('/api/reset-password', {
+      method: 'POST',
+      body: JSON.stringify({ token, password, confirm }),
+    });
+
+    setLoading(btn, false);
+    if (ok) {
+      showAlert('alert-container', 'Password reset! Redirecting to login...', 'success');
+      setTimeout(() => window.location.href = data.redirect || '/login', 1200);
+    } else {
+      showAlert('alert-container', data.error || 'Reset failed.', 'error');
+      if (data.error && data.error.includes('expired')) {
+        document.getElementById('resetForm').classList.add('hidden');
+        document.getElementById('invalid-token').classList.remove('hidden');
+      }
+    }
+  });
+</script>
+</body>
+</html>
