@@ -1,9 +1,20 @@
-#  AuthSystem
+<div align="center">
 
-A production-ready full-stack authentication system built with **Node.js**, **Express**, **JWT**, and **bcrypt**. Features a clean, responsive UI across 6 pages with complete user lifecycle management — from registration to session revocation.
+# AuthSystem – Secure Authentication & User Management Platform
+
+Production-ready full-stack authentication platform featuring **JWT authentication**, **bcrypt password hashing**, **role-based authorization**, **session management**, **password recovery**, and **account security**.
+
+Built with **Node.js + Express**, focused on secure authentication workflows, RESTful APIs, modern UI, and production-ready security best practices.
+
+![Node.js](https://img.shields.io/badge/Node.js-20.x-green?logo=node.js)
+![Express](https://img.shields.io/badge/Express-4.x-black?logo=express)
+![JWT](https://img.shields.io/badge/Auth-JWT-blue)
+![Security](https://img.shields.io/badge/Security-bcrypt-red)
+![License](https://img.shields.io/badge/License-MIT-blue)
+
+</div>
 
 ---
-
 
 ##  Preview
 
