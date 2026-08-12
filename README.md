@@ -1,4 +1,3 @@
-<div align="center">
 
 # AuthSystem – Secure Authentication & User Management Platform
 
