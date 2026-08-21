@@ -444,8 +444,7 @@ module.exports = mongoose.model('User', UserSchema);
 
 ##  License
 
-MIT — free to use, modify, and distribute.
-
+MIT — Manya Singh
 ---
 
 ## 🙌 Credits
