@@ -1,6 +1,6 @@
 <div align="center">
 
-# AuthSystem – Secure Authentication & User Management Platform
+# AuthSystem– Secure Authentication & User Management Platform
 
 Production-ready full-stack authentication platform featuring **JWT authentication**, **bcrypt password hashing**, **role-based authorization**, **session management**, **password recovery**, and **account security**.
 
